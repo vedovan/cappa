@@ -2667,6 +2667,13 @@ html.dark-mode body .ace_editor .ace_cursor {
     cursor: pointer;
     outline: none;
 }
+/* Чтобы не было рамки */
+.profile__bar-theme-icon:focus,
+.profile__bar-theme-icon:active {
+    outline: none;
+    box-shadow: none;
+}
+
 .profile__bar-theme-icon.sun {
     background-image: url('../img/sun.svg');
 }
