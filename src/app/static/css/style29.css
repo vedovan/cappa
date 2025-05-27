@@ -2637,6 +2637,13 @@ html.dark-mode body code {
 }
 
 /* Цвета строк таблицы тестов */
+html.dark-mode body .js__form__tests-table,
+html.dark-mode body .js__form__tests-table thead,
+html.dark-mode body .js__form__tests-table tbody,
+html.dark-mode body .js__form__tests-table thead th,
+html.dark-mode body .js__form__tests-table tbody td {
+    background-color: transparent !important;
+}
 html.dark-mode body .js__form__tests-table tbody tr.success {
     background: #234d2b !important;
     color: #e0e0e0 !important;
@@ -2644,6 +2651,9 @@ html.dark-mode body .js__form__tests-table tbody tr.success {
 html.dark-mode body .js__form__tests-table tbody tr.unluck {
     background: #612828 !important;
     color: #e0e0e0 !important;
+}
+html.dark-mode body .js__form__tests-table td pre {
+    background-color: transparent !important;
 }
 
 /* Ace cursor */
