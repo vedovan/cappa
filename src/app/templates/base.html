@@ -12,6 +12,15 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicons/favicon-16x16.png' %}">
         <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
         <link rel="stylesheet" href="{% static 'css/jquery.tablesorter.css' %}">
+        <script>
+        (function() {
+          try {
+            if (localStorage.getItem('theme') === 'dark') {
+              document.documentElement.classList.add('dark-mode');
+            }
+          } catch (e) {}
+        })();
+        </script>
         <link rel="stylesheet" href="{% static 'css/style29.css' %}">
         <link href="https://fonts.googleapis.com/css?family=Lemon&display=swap" rel="stylesheet">
     {% endblock %}
@@ -43,6 +52,7 @@
                         {% else %}
                             <a class="profile__bar-login" href="{% url 'auth:signin' %}">Войти</a>
                         {% endif %}
+                    <button id="theme-toggle" class="profile__bar-theme-icon" title="Сменить тему"></button>
                     </div>
                 </div>
             </div>
@@ -98,7 +108,9 @@
         </div>
     </footer>
     
-{% block js %}{% endblock %}
+{% block js %}
+    <script src="{% static 'js/theme.js' %}"></script>
+{% endblock %}
 
 </body>
 </html>
