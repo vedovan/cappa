@@ -1,5 +1,6 @@
 {% extends 'tasks/base.html' %}
 
+{% load embed_video %}
 {% load static tasks_tags %}
 
 
@@ -10,7 +11,7 @@
                 <span>{{ object.numbered_title }}</span>
             </h1>
             <h3>Условие</h3>
-            {{ object.task.content|safe }}
+            {{ object.task.content|embed_video_in_text }}
 
             <p>
             {% if object.score_method_is_review or object.score_method_is_tests_and_review %}
