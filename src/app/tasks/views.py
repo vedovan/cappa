@@ -13,6 +13,7 @@ from app.tasks.filters import SolutionsFilterSet
 from app.tasks.services.statistics import UserStatisticsService
 from app.common.services.exceptions import ServiceException
 from app.common.decorators import teacher_access
+from django.utils import timezone
 
 UserModel = get_user_model()
 
@@ -29,6 +30,14 @@ class SolutionView(View):
 
     def get(self, request, *args, **kwargs):
         solution = self.get_object()
+
+        if not solution.started_at:
+            solution.started_at = timezone.now()
+            solution.save()
+
+
+        elapsed_seconds = int(solution.time_spent or 0)
+
         return render(
             request,
             template_name='tasks/solution/template.html',
@@ -37,7 +46,8 @@ class SolutionView(View):
                 'form': (
                     ReviewSolutionForm(instance=solution)
                     if request.user.is_teacher else None
-                )
+                ),
+                'elapsed_seconds': elapsed_seconds,  # 👈 нужно для JS-таймера
             }
         )
 

@@ -1,6 +1,6 @@
 {% extends 'tasks/base.html' %}
 {% load static base_tags %}
-
+{% load time_filters %}
 
 {% block content %}
     <div class="one-col">
@@ -11,6 +11,19 @@
                 <h1 class="text-center">Внешнее решение</h1>
             {% endif %}
             {% include 'tasks/solution/parts/info_table.html' %}
+            {% if request.user.is_teacher %}
+            {% if object.time_spent %}
+                <p style="margin: 10px 0 0 15px;">
+                    <strong>Время выполнения:</strong> {{ object.time_spent|duration_hm }}
+                </p>
+            {% endif %}
+
+            {% if object.needs_manual_check %}
+                <p style="margin-left: 15px; color: #b84c00;">
+                    ❓ <strong>Задание выполнено слишком быстро и нуждается в ручной проверке.</strong>
+                </p>
+            {% endif %}
+        {% endif %}
         </div>
 
         {% if object.is_internal %}

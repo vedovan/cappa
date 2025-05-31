@@ -54,6 +54,7 @@ class GroupViewSet(GenericViewSet):
             data = GroupStatisticsService.get_course_statistics(
                 group=group,
                 course_id=slz.data['course_id'],
+                user=request.user,
             )
         except exceptions.CourseNotFoundException:
             raise Http404

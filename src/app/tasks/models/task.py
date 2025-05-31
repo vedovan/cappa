@@ -8,7 +8,8 @@ from app.tasks.enums import DifficultyLevel
 from app.tasks.models.tag import Tag
 from app.tasks.models.source import Source
 from app.tasks.models.checker import Checker
-
+from datetime import timedelta
+from django.db.models import DurationField
 
 UserModel = get_user_model()
 
@@ -62,6 +63,11 @@ class Task(models.Model):
         max_length=255,
         blank=True,
         null=True
+    )
+    min_duration = DurationField(
+        verbose_name='минимальное время выполнения',
+        default=timedelta(minutes=1),
+        help_text='Если задание решено быстрее этого времени — появляется знак "?"'
     )
     rating = models.PositiveIntegerField(
         default=0,

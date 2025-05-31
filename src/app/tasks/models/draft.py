@@ -7,6 +7,7 @@ from django.db.models import (
 )
 from app.tasks.models import Task
 from app.translators.enums import TranslatorType
+from django.db.models import FloatField
 
 UserModel = get_user_model()
 
@@ -20,3 +21,8 @@ class Draft(Model):
         choices=TranslatorType.CHOICES
     )
     content = TextField()
+    time_spent = FloatField(
+        null=True,
+        blank=True,
+        help_text='накопленное время выполнения (в секундах)'
+    )

@@ -312,6 +312,9 @@ class Editor {
 
     createSolution(){
         var content = this.form.querySelector('textarea.js__editor-content[name=content]').value
+        const elapsed = (typeof window.getSessionSeconds === 'function')
+            ? window.getSessionSeconds()
+            : 0;
         if(content){
             if (confirm('Вы уверены что хотите отправить решение задачи?')){
                 var that = this;
@@ -320,7 +323,10 @@ class Editor {
                 $.ajax({
                     url: `/api/tasks/taskitem/${that.translatorId}/${that.taskitemId}/create-solution/`,
                     type: 'POST',
-                    data: JSON.stringify({code: content}),
+                    data: JSON.stringify({
+                        code: content,
+                        elapsed: elapsed
+                    }),
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     headers: {'Authorization': `Token ${window.authToken}`},
@@ -329,6 +335,9 @@ class Editor {
                             editorShowMessage(that, 'Готово', 'success');
                             editorShowSolutionsLink();
                             editorEnableButtons(that);
+                            if (typeof window.resetTimer === 'function') {
+                                 window.resetTimer();
+                            }
                         }
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -342,13 +351,19 @@ class Editor {
     saveDraft(){
         var content = this.form.querySelector('textarea.js__editor-content[name=content]').value,
             that = this;
-
+        const elapsed = (typeof window.getSessionSeconds === 'function')
+            ? window.getSessionSeconds()
+            : 0;
         editorShowLoader(that, 'Сохранение');
         editorDisableButtons(that);
         $.ajax({
             url: `/api/tasks/${that.taskId}/draft/`,
             type: 'POST',
-            data: JSON.stringify({content: content, translator: that.translator}),
+            data: JSON.stringify({
+                content: content,
+                translator: that.translator,
+                elapsed: elapsed
+            }),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             headers: {'Authorization': `Token ${window.authToken}`},
@@ -356,6 +371,9 @@ class Editor {
                 200: function(response){
                     editorShowMessage(that, 'Готово', 'success')
                     editorEnableButtons(that);
+                    if (typeof window.resetTimer === 'function') {
+                        window.resetTimer();
+                    }
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {

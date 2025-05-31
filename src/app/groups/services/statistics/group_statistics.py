@@ -7,7 +7,9 @@ from app.tasks.queries import CreateOrUpdateCourseUserStatisticsQuery
 from app.tasks.models import UserStatistics, TaskItem
 from app.tasks.entities import TaskItemStatistics
 from app.tasks.enums import TaskItemType
-
+from app.groups.enums import GroupMemberRole
+from app.tasks.models import Solution
+from django.db.models import Q
 
 UserModel = get_user_model()
 
@@ -35,6 +37,7 @@ class GroupStatisticsService:
         cls,
         group: Group,
         course_id: int,
+        user: UserModel
     ) -> Dict[str, Any]:
 
         """ Формат ответа:
@@ -90,10 +93,43 @@ class GroupStatisticsService:
             .values("id", "max_score")
         )
         tasks_max_points = {
-            str(t["id"]): float(t["max_score"]) for t in tasks_qs
+            t["id"]: float(t["max_score"]) for t in tasks_qs
         }
+        first_solutions = (
+            Solution.objects
+            .filter(
+                task_id__in=list(tasks_max_points.keys()),
+                user_id__in=result.keys(),
+            )
+            .filter(
+                Q(score__gt=0) | Q(review_status__in=['ready', 'review'])
+            )
+            .order_by('user_id', 'task_id', 'id')
+            .distinct('user_id', 'task_id')
+            .values('user_id', 'task_id', 'time_spent', 'needs_manual_check')
+        )
+
+        sol_map = {
+            (str(s["user_id"]), str(s["task_id"])): (
+                int(s["time_spent"] or 0),
+                bool(s["needs_manual_check"])
+            )
+            for s in first_solutions
+        }
+
+        for user_id, tasks in result.items():
+            for task_id, cell in tasks.items():
+                exec_time, too_fast = sol_map.get((str(user_id), str(task_id)), (0, False))
+                cell["execution_time"] = exec_time
+                cell["needs_manual_check"] = too_fast
+
+        is_teacher = group.group_members.filter(
+            user=user,
+            role=GroupMemberRole.TEACHER
+        ).exists()
 
         return {
             "tasks_max_points": tasks_max_points,
             "stats": result,
+            "is_teacher": is_teacher,
         }

@@ -15,6 +15,8 @@ class TaskItemStatistics(TypedDict):
     review_score: Optional[str]
     testing_score: Optional[str]
     due_in: Optional[str]
+    execution_time: int
+    needs_manual_check: bool
 
 
 class PlagCheckUser(TypedDict):

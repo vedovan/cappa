@@ -1187,6 +1187,9 @@ main .content.courses__container {
 .s-cyan {
     background-color: #63b6fd;
 }
+.s-orange {
+    background-color: #f4863c !important;
+}
 .s-grey {
     background-color: #c1c1c1;
 }
@@ -2193,6 +2196,7 @@ html.dark-mode body .s-yellow{ background-color: #8f8b26 !important; }
 html.dark-mode body .s-green { background-color: #3e7f3a !important; }
 html.dark-mode body .s-cyan  { background-color: #2d6ca2 !important; }
 html.dark-mode body .s-grey  { background-color: #666 !important; }
+html.dark-mode body .s-orange { background-color: #9c7d20 !important; }
 
 /* Основной вид таблиц */
 html.dark-mode body table,
@@ -2332,11 +2336,18 @@ html.dark-mode body textarea:focus::placeholder {
 }
 
 /* Фильтры */
+html.dark-mode body .topic-filter {
+    background-color: #1f1f1f;
+    border: 1px solid #333;
+}
 html.dark-mode body #js__topic-cols label {
     background: transparent;
     color: #e0e0e0;
 }
 html.dark-mode body #js__topic-cols input[type="checkbox"] {
+    accent-color: #5fcf80;
+}
+html.dark-mode body input[type="checkbox"] {
     accent-color: #5fcf80;
 }
 

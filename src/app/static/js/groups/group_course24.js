@@ -79,6 +79,7 @@ topicFilterPanel.addEventListener('change', e => {
 function updateTable(resp) {
     const tasksMap = resp.tasks_max_points || {};
     const stats    = resp.stats           || resp;
+    const isTeacher = resp.is_teacher === true;
     window.tasksMaxPoints = { ...tasksMap };
 
     for (const [userId, userData] of Object.entries(stats)) {
@@ -161,6 +162,25 @@ function updateTable(resp) {
                     localScore = data.testing_score;
                     isSolved = true;
                 }
+            }
+           if (isTeacher && data.needs_manual_check) {
+                const awaitingStatuses = ['ready', 'review'];
+                const underReview = checkMethods.reviewMethods.includes(data.score_method)
+                    && awaitingStatuses.includes(data.review_status);
+
+                if (!underReview) {
+                    // Только если не на проверке — ставим "?"
+                    cell.textContent = '?';
+                    td.className = td.className.replace(/\bs-\w+/g, '');
+                    td.classList.add('s-orange');
+                }
+           }
+
+            if (isTeacher && typeof data.execution_time === 'number' && data.execution_time > 0) {
+                const m  = Math.floor(data.execution_time / 60);
+                const s  = Math.floor(data.execution_time % 60);
+                const ts = `${m} мин ${s.toString().padStart(2, '0')} сек`;
+                td.title += (td.title ? '\n' : '') + `Время выполнения: ${ts}`;
             }
             td.append(cell);
             td.dataset.score = localScore;
@@ -256,7 +276,11 @@ function recalcTotals() {
         tr.querySelectorAll('td.js__taskitem').forEach(td => {
             if (td.style.display === 'none') return;
             const val = td.dataset.score;
-            if (td.classList.contains('s-green') || td.classList.contains('s-yellow')) {
+            if (
+                td.classList.contains('s-green') ||
+                td.classList.contains('s-yellow') ||
+                td.classList.contains('s-orange')
+            ) {
                 solved += 1;
             }
             const num = parseFloat(val);

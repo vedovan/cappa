@@ -24,3 +24,9 @@ class TestingSerializer(Serializer):
 class CreateSolutionSerializer(Serializer):
 
     code = CharField(write_only=True)
+    elapsed = IntegerField(
+        write_only=True,
+        required=False,
+        default=0,
+        min_value=0
+    )

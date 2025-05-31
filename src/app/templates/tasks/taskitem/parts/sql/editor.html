@@ -1,4 +1,5 @@
 {% load training_tags %}
+{% load static %}
 
 <form
     class="editor-form js__editor-form"
@@ -43,4 +44,6 @@
         {% show_ace_field form.error %}
         {% show_ace_field form.output %}
     {% endif %}
+
+    <script src="{% static 'js/tasks/timer.js' %}"></script>
 </form>

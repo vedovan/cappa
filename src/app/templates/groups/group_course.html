@@ -106,6 +106,9 @@
         <tr><td class="s-green">+</td><td>Решено на максимальный балл</td></tr>
         <tr><td class="s-green">✔</td><td>Проверено, но оценка скрыта (для режима проверки преподавателем)</td></tr>
         <tr><td class="awaiting-check s-cyan"></td><td>Отправлено на проверку (для режима проверки преподавателем)</td></tr>
+        {% if request.user.is_teacher %}
+        <tr><td class="s-orange">?</td><td>Решено слишком быстро — требуется проверка преподавателя</td></tr>
+        {% endif %}
         <tr><td class="s-grey"></td><td>Решение отправлено позже даты сдачи</td></tr>
     </table>
 

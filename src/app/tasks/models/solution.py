@@ -20,7 +20,7 @@ from app.tasks.enums import (
 from app.tasks.models import Task, Source
 from app.translators.enums import TranslatorType
 from app.tasks.querysets import SolutionQueryset
-
+from datetime import timedelta
 
 UserModel = get_user_model()
 
@@ -204,6 +204,22 @@ class Solution(Model):
         verbose_name='итоговая оценка',
         null=True,
         help_text='рассчитывается автоматически'
+    )
+    started_at = DateTimeField(
+        verbose_name='время начала работы',
+        null=True,
+        blank=True,
+        help_text='Когда студент впервые открыл задание'
+    )
+    time_spent = FloatField(
+        verbose_name='время выполнения (в секундах)',
+        null=True,
+        blank=True,
+        help_text='Общее время, потраченное на выполнение'
+    )
+    needs_manual_check = BooleanField(
+        verbose_name='Слишком быстрое решение',
+        default=False
     )
     objects = SolutionQueryset.as_manager()
 

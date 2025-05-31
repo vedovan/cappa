@@ -56,7 +56,8 @@ def show_editor(
         context={
             'object': taskitem,
             'form': form,
-            'show_testing_actions': show_testing_actions
+            'show_testing_actions': show_testing_actions,
+            'elapsed_seconds': int(draft.time_spent or 0) if draft else 0
         },
         request=context.request
     )
