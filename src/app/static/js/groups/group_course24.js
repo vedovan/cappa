@@ -80,12 +80,16 @@ function updateTable(resp) {
     const tasksMap = resp.tasks_max_points || {};
     const stats    = resp.stats           || resp;
     const isTeacher = resp.is_teacher === true;
+    window.userIsTeacher = isTeacher;
     window.tasksMaxPoints = { ...tasksMap };
+
+    const tbody = document.querySelector('.js__course__table tbody');
+    const frag  = document.createDocumentFragment();
 
     for (const [userId, userData] of Object.entries(stats)) {
         const tr = document.getElementById(`js__member-${userId}`);
         if (!tr) continue;
-
+        frag.appendChild(tr);
         let solved = 0, scoreSum = 0;
 
         for (const [taskId, data] of Object.entries(userData)) {
@@ -112,7 +116,7 @@ function updateTable(resp) {
             }
 
             // Создание содержимого ячейки
-            const cell = window.userIsTeacher
+            const cell = isTeacher
                 ? Object.assign(document.createElement('a'), {
                     href: `/solutions/${data.id}/`,
                     target: '_blank'
@@ -191,6 +195,8 @@ function updateTable(resp) {
         tr.querySelector('.js__total_solved_tasks').textContent = solved;
         tr.querySelector('.js__total_score').textContent = scoreSum.toFixed(1);
     }
+    tbody.innerHTML = '';
+    tbody.appendChild(frag);
     $('.js__tablesorter').trigger('update');
     buildTopicFilter();
     applyTopicFilter();

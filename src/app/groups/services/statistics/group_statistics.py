@@ -120,7 +120,7 @@ class GroupStatisticsService:
         for user_id, tasks in result.items():
             for task_id, cell in tasks.items():
                 exec_time, too_fast = sol_map.get((str(user_id), str(task_id)), (0, False))
-                cell["execution_time"] = exec_time
+                cell["execution_time"] = int(exec_time or 0)
                 cell["needs_manual_check"] = too_fast
 
         is_teacher = group.group_members.filter(
